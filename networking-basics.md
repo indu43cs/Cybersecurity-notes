@@ -742,3 +742,188 @@ Used in DDoS attacks.
 3️⃣ DNS Tunneling
 
 Attackers hide data inside DNS queries.
+
+# 🌐 Web Log Analysis – Quick Revision
+
+## 📌 What are Web Logs?
+
+Web logs are records of HTTP requests made to a web server.  
+They are used for:
+- Monitoring traffic
+- Debugging issues
+- Security analysis (forensics)
+
+---
+
+## 🧾 Common Log Format (Apache/Nginx)
+
+```
+127.0.0.1 - - [10/Mar/2026:14:32:10 +0000] "GET /index.html HTTP/1.1" 200 1024
+```
+
+---
+
+## 🔍 Log Fields Explanation
+
+| Field | Meaning |
+|------|--------|
+| IP Address | Client IP making the request |
+| Timestamp | Date and time of request |
+| Method | GET / POST / etc |
+| URL | Requested resource |
+| Protocol | HTTP version |
+| Status Code | Response status |
+| Response Size | Size of returned data |
+
+---
+
+## 📥 HTTP Methods in Logs
+
+- **GET** → Retrieve data  
+- **POST** → Send data (login/forms)  
+- **PUT** → Update data  
+- **DELETE** → Remove data  
+
+---
+
+## 📊 Important Status Codes
+
+| Code | Meaning |
+|------|--------|
+| 200 | OK |
+| 301 | Redirect |
+| 403 | Forbidden |
+| 404 | Not Found |
+| 500 | Server Error |
+
+---
+
+## 🚨 Suspicious Patterns in Logs
+
+### 1. Brute Force Attack
+Multiple login attempts:
+
+```
+POST /login HTTP/1.1
+POST /login HTTP/1.1
+POST /login HTTP/1.1
+```
+
+🔎 Indicator:
+- Same IP
+- Many failed attempts (401/403)
+
+---
+
+### 2. SQL Injection
+
+```
+GET /login?username=admin'--&password=x
+```
+
+🔎 Indicator:
+- `'--`
+- `' OR 1=1`
+
+---
+
+### 3. XSS (Cross-Site Scripting)
+
+```
+GET /search?q=<script>alert(1)</script>
+```
+
+🔎 Indicator:
+- `<script>` tags
+- JavaScript payloads
+
+---
+
+### 4. Directory Traversal
+
+```
+GET /../../etc/passwd
+```
+
+🔎 Indicator:
+- `../` patterns
+
+---
+
+### 5. Scanning Activity
+
+```
+GET /admin
+GET /phpmyadmin
+GET /wp-login.php
+```
+
+🔎 Indicator:
+- Multiple endpoints in short time
+
+---
+
+## 🌐 IP Analysis
+
+Check:
+- Repeated requests from same IP
+- Unknown or suspicious locations
+- High frequency requests
+
+---
+
+## 🔐 User-Agent Analysis
+
+Example:
+```
+User-Agent: sqlmap
+```
+
+🔎 Suspicious if:
+- Automated tools (sqlmap, curl, python)
+- Missing or fake user-agent
+
+---
+
+## 🍪 Cookie Analysis
+
+```
+Cookie: sessionid=abc123
+```
+
+Check for:
+- Session reuse
+- Missing security flags (HttpOnly, Secure)
+
+---
+
+## ⚡ Log Analysis Workflow
+
+```
+1. Identify suspicious IPs
+2. Check request patterns
+3. Analyze status codes
+4. Inspect payloads (URL/body)
+5. Correlate timestamps
+6. Confirm attack type
+```
+
+---
+
+## 🧠 Key Use in Cyber Forensics
+
+- Detect attacks (SQLi, XSS, brute force)
+- Trace attacker activity
+- Reconstruct incidents
+- Identify compromised accounts
+
+---
+
+## 🎯 Summary
+
+Web logs help us:
+- Understand user activity
+- Detect malicious behavior
+- Investigate security incidents
+
+They are a **primary evidence source in cyber forensics**.
